@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import Alert from "../components/Alert";
 import Navbar from "../components/Navbar";
 import PatientReactionSection from "../components/form-sections/PatientReactionSection";
-import SuspectedDrugSection from "../components/form-sections/SuspectedDrugSection";
-import ConcomitantDrugSection from "../components/form-sections/ConcomitantDrugSection";
+import CoAdministratingSection from "../components/form-sections/CoAdministratingSection";
 import CaseReportSection from "../components/form-sections/CaseReportSection";
 import { useReportForm } from "../hooks/useReportForm";
 import { submitAdverseReaction } from "../services/api";
+import CharacterizationOfDrugRoleSection from "../components/form-sections/CharacterizationOfDrugRoleSection";
 
 export default function FormPage() {
   const { data, errors, change, toggle, validate, reset } = useReportForm();
@@ -24,7 +24,11 @@ export default function FormPage() {
         title: "Please complete the required information.",
         text: "Check the highlighted fields and try again.",
       });
-      document.querySelector(".has-error input, .has-error textarea, .has-error select")?.focus();
+      document
+        .querySelector(
+          ".has-error input, .has-error textarea, .has-error select",
+        )
+        ?.focus();
       return;
     }
 
@@ -96,17 +100,32 @@ export default function FormPage() {
       <Navbar />
       <main className="form-page">
         <div className="form-intro">
-          <Link to="/" className="back-link">← Back to home</Link>
+          <Link to="/" className="back-link">
+            ← Back to home
+          </Link>
           <p className="eyebrow">ADVERSE REACTION REPORT</p>
           <h1>Suspected adverse reaction form</h1>
-          <p>Fields marked with <span className="required">*</span> are required to submit a report.</p>
+          <p>
+            Fields marked with <span className="required">*</span> are required
+            to submit a report.
+          </p>
         </div>
 
         {notice && (
-          <Alert kind={notice.kind} title={notice.title} onDismiss={() => setNotice(null)}>
+          <Alert
+            kind={notice.kind}
+            title={notice.title}
+            onDismiss={() => setNotice(null)}
+          >
             {notice.text}
             {notice.kind === "success" && (
-              <button className="alert-link" onClick={() => { reset(); setNotice(null); }}>
+              <button
+                className="alert-link"
+                onClick={() => {
+                  reset();
+                  setNotice(null);
+                }}
+              >
                 Start a new report
               </button>
             )}
@@ -114,15 +133,32 @@ export default function FormPage() {
         )}
 
         <form onSubmit={submit} noValidate>
-          <PatientReactionSection data={data} errors={errors} onChange={change} onToggle={toggle} />
-          <SuspectedDrugSection data={data} errors={errors} onChange={change} />
-          <ConcomitantDrugSection data={data} onChange={change} />
+          <PatientReactionSection
+            data={data}
+            errors={errors}
+            onChange={change}
+            onToggle={toggle}
+          />
+          <CharacterizationOfDrugRoleSection
+            data={data}
+            errors={errors}
+            onChange={change}
+          />
+          <CoAdministratingSection data={data} onChange={change} />
           <CaseReportSection data={data} onChange={change} onToggle={toggle} />
 
           <div className="submit-row">
-            <p>By submitting, you confirm the information is accurate to the best of your knowledge.</p>
-            <button className="button button-primary" type="submit" disabled={submitting}>
-              {submitting ? "Submitting report…" : "Submit report"} <span>→</span>
+            <p>
+              By submitting, you confirm the information is accurate to the best
+              of your knowledge.
+            </p>
+            <button
+              className="button button-primary"
+              type="submit"
+              disabled={submitting}
+            >
+              {submitting ? "Submitting report…" : "Submit report"}{" "}
+              <span>→</span>
             </button>
           </div>
         </form>
